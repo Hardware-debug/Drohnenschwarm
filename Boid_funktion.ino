@@ -42,13 +42,13 @@ Vec3 teile(Vec3 a, float s){
   }
 }
 
-Vec3 laenge(Vec3 a){
-  return sqrtf(a.x*a.x + a.y*a.y * a.z*a.z);
+float laenge(Vec3 a){
+  return sqrtf(a.x*a.x + a.y*a.y + a.z*a.z);
 }
 
-Vec3 setLeange(Vec3 a, float m){
+Vec3 setLaenge(Vec3 a, float m){
   float l = laenge(a);
-  if(l = 0) return a;
+  if(l == 0) return a;
   return mal(a, m/l);
 }
 
@@ -56,6 +56,12 @@ Vec3 begrenze(Vec3 a, float b){
   if(laenge(a)>b) return setLaenge(a,b);
   return a; 
 }
+
+float abstand(Vec3 a, Vec3 b){
+return laenge(subtrahiere(a,b));
+}
+
+//einheit in m
 
 #define MAX_DROHNEN      8
 #define MEINE_ID         1        // pro Drohne aendern!
@@ -79,7 +85,7 @@ struct Nachbar{
   Vec3 vel;
   uint32_t letzteMeldung;
   bool     belegt;
-}
+};
 
 Vec3 meineVel;
 Vec3 meinePos;
@@ -87,10 +93,17 @@ Vec3 meineAcc;
 
 Nachbar nachbar [MAX_DROHNEN];
 
-bool istAktiv(uinti_t i){
-  if(!nachbar[i]=false) return false;
-  return (millis() - nachbar[i].letzeMeldung) < TIMEOUT;
+bool istAktiv(uint8_t i) {
+  if (!nachbar[i].belegt) return false;
+  if (i == MEINE_ID) return false;
+  return (millis() - nachbar[i].letzteMeldung) < TIMEOUT;
 }
+
+Vec3 separation(){
+  
+}
+
+
 
 void setup() {
   // put your setup code here, to run once:
