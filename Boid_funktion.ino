@@ -100,7 +100,20 @@ bool istAktiv(uint8_t i) {
 }
 
 Vec3 separation(){
-  
+  Vec3 s = {0,0,0};
+  uint8_t z = 0;
+  for(uint8_t i=0; i < MAX_DROHNEN; i++){
+    if(istAktiv(i) == true){
+      float d = abstand(meinePos,nachbar[i].pos);
+      if(d <= MIN_ABSTAND && d > 0){
+        z++;
+       s = addiere(s,teile(subtrahiere(meinePos,nachbar[i].pos), d * d));
+      }
+    }
+  }
+  if(z==0) return {0,0,0};
+  s = teile(s,z);
+  return begrenze(subtrahiere(setLaenge(s,MAX_SPEED),meineVel),MAX_FORCE);
 }
 
 
