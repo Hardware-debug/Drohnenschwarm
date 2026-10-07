@@ -116,6 +116,23 @@ Vec3 separation(){
   return begrenze(subtrahiere(setLaenge(s,MAX_SPEED),meineVel),MAX_FORCE);
 }
 
+Vec3 alignment(){
+  Vec3 g = {0,0,0};
+  uint8_t z = 0;
+  for(uint8_t i=0; i < MAX_DROHNEN; i++){
+    if(istAktiv(i) == true){
+      float d = abstand(meinePos,nachbar[i].pos);
+      if(d < SICHT && d > 0){
+        z++;
+        g = addiere(g,nachbar[i].vel);
+      }
+    }
+  }
+  if(z==0) return g;
+  g = teile(g,z);
+  return begrenze(subtrahiere(setLaenge(g,MAX_SPEED),meineVel),MAX_FORCE);
+}
+
 
 
 void setup() {
