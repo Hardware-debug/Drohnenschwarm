@@ -1,2 +1,3 @@
 Mein Jugendforscht Projekt
-Autonomer Drohnenschwarm(kann mit Edge SI noch ausgestattet werden)
+Autonomer Drohnenschwarm
+Kann mit Edge SI(Super Intelligence) noch ausgestattet werden
