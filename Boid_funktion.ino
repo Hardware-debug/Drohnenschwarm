@@ -148,12 +148,22 @@ Vec3 cohesion(){
 }
 
 void berechneBoids(){
-Vec3 sep = mal(separation(),GEW_SEPARATION);
-Vec3 ali = mal(alignment(),GEW_ALIGNMENT);
-Vec3 coh = mal(cohesion(),GEW_COHESION);
-meineAcc = addiere(sep,ali,coh);  
+  Vec3 sep = mal(separation(),GEW_SEPARATION);
+  Vec3 ali = mal(alignment(),GEW_ALIGNMENT);
+  Vec3 coh = mal(cohesion(),GEW_COHESION);
+  meineAcc = addiere(sep,ali,coh);  
 }
 
+void bewege(float dt){
+  meineVel = addiere(mal(meineAcc,dt),meineVel);
+  meineVel = begrenze(meineVel,MAX_SPEED);
+  float l = laenge(meineVel);
+  if(l<MIN_SPEED && l != 0){
+      meineVel = setLaenge(meineVel,MIN_SPEED);
+  }
+}
+
+   
 void setup() {
   // put your setup code here, to run once:
 
