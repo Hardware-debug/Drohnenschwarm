@@ -10,12 +10,12 @@ struct Vec3 {
   float z;
 };
 
-Vec3 addiere(Vec3 a, Vec3 b){
-  Vec3 c;
-  c.x = a.x + b.x;
-  c.y = a.y + b.y;
-  c.z = a.z + b.z;
-  return c;
+Vec3 addiere(Vec3 a, Vec3 b,Vec3 c){
+  Vec3 d;
+  d.x = a.x + b.x + c.x;
+  d.y = a.y + b.y + c.y;
+  d.z = a.z + b.z + c.z;
+  return d;
 }
 
 Vec3 subtrahiere(Vec3 a, Vec3 b){
@@ -117,23 +117,42 @@ Vec3 separation(){
 }
 
 Vec3 alignment(){
-  Vec3 g = {0,0,0};
+  Vec3 s = {0,0,0};
   uint8_t z = 0;
   for(uint8_t i=0; i < MAX_DROHNEN; i++){
     if(istAktiv(i) == true){
       float d = abstand(meinePos,nachbar[i].pos);
       if(d < SICHT && d > 0){
         z++;
-        g = addiere(g,nachbar[i].vel);
+        s = addiere(s,nachbar[i].vel);
       }
     }
   }
-  if(z==0) return g;
-  g = teile(g,z);
-  return begrenze(subtrahiere(setLaenge(g,MAX_SPEED),meineVel),MAX_FORCE);
+  if(z==0) return s;
+  s = teile(s,z);
+  return begrenze(subtrahiere(setLaenge(s,MAX_SPEED),meineVel),MAX_FORCE);
 }
 
+Vec3 cohesion(){
+  Vec3 s = {0,0,0};
+  uint8_t z = 0;
+  for(uint8_t i=0; i<MAX_DROHNEN; i++){
+    if(istAktiv(i) && SICHT>abstand(meinePos,nachbar[i].pos)){
+      z++;
+      s = addiere(s,nachbar[i].pos);
+    }
+  }if(z==0) return s;
+  s = teile(s,z);
+  s = subtrahiere(s,meinePos);
+  return begrenze(subtrahiere(setLaenge(s,MAX_SPEED),meineVel),MAX_FORCE);
+}
 
+void berechneBoids(){
+Vec3 sep = mal(separation(),GEW_SEPARATION);
+Vec3 ali = mal(alignment(),GEW_ALIGNMENT);
+Vec3 coh = mal(cohesion(),GEW_COHESION);
+meineAcc = addiere(sep,ali,coh);  
+}
 
 void setup() {
   // put your setup code here, to run once:
